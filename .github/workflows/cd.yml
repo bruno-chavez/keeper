@@ -35,8 +35,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v6
         with:
-          args: release --rm-dist
+          args: release --clean
+          version: '~> v2'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
