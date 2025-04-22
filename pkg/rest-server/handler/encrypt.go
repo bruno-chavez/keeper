@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
@@ -26,7 +26,7 @@ func (h Handler) Encrypt(w http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	data, err := ioutil.ReadAll(request.Body)
+	data, err := io.ReadAll(request.Body)
 	if err != nil {
 		log.Printf("error parsing request body: %v\n", err)
 		err := writeResponse(w, http.StatusBadRequest, parsingErrorMessage)

@@ -1,0 +1,10 @@
+name: Setup Go
+description: Setup Go
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'

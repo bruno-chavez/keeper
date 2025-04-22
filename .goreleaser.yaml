@@ -1,8 +1,12 @@
+version: 2
+
 before:
   hooks:
     - go mod tidy
+
 builds:
-  - main: ./cmd/keeper
+  - id: keeper
+    main: ./cmd/keeper
     binary: keeper
     goos:
       - linux
@@ -19,15 +23,17 @@ builds:
     ignore:
       - goos: windows
         goarch: arm64
+      - goos: darwin
+        goarch: amd64
+
 archives:
-  - format: binary
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      amd64: x86_64
+  - formats:
+    - binary
+    id: keeper
+
 dockers:
-  - dockerfile: .goreleaser.dockerfile
+  - id: keeper
+    dockerfile: .goreleaser.dockerfile
     goos: linux
     goarch: amd64
     goamd64: v2
@@ -36,6 +42,7 @@ dockers:
       - "ghcr.io/bruno-chavez/keeper:v{{ .Major }}"
       - "ghcr.io/bruno-chavez/keeper:v{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/bruno-chavez/keeper:latest"
+
 changelog:
   use: github
   sort: asc
