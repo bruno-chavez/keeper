@@ -18,10 +18,11 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/setup-go
       - name: Test
-        run: |
-          wget -o -q https://github.com/mfridman/tparse/releases/download/v0.10.3/tparse_linux_x86_64 -O tparse
-          chmod +x tparse
-          go test ./... -json -cover | ./tparse
+        run: go test -coverprofile=coverage.txt
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   go-lint:
     runs-on: ubuntu-latest
     steps:
