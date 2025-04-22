@@ -18,8 +18,8 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/setup-go
       - name: Test
-        run: go test -coverprofile=coverage.txt
-      - name: Upload coverage reports to Codecov
+        run: go test ./... -coverprofile=coverage.txt
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
+      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
