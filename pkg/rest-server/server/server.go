@@ -16,7 +16,7 @@ func NewServer(h *handler.Handler, version string, port string) *http.Server {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		info := []byte(`{"version": "0.1.0"}`)
+		info := []byte(`{"version": "` + version + `"}`)
 
 		_, err := w.Write(info)
 		if err != nil {
