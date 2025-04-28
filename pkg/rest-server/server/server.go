@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func NewServer(h *handler.Handler) *http.Server {
+func NewServer(h *handler.Handler, version string, port string) *http.Server {
 	r := mux.NewRouter()
 
 	// routes
@@ -26,9 +26,13 @@ func NewServer(h *handler.Handler) *http.Server {
 
 	r.HandleFunc("/encrypt", h.Encrypt).Methods("POST")
 
+	if port == "" {
+		port = "8080"
+	}
+
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         ":8080",
+		Addr:         ":" + port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 		IdleTimeout:  60 * time.Second,

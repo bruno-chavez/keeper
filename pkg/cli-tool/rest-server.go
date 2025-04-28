@@ -27,7 +27,10 @@ var restServer = &cobra.Command{
 		r := repository.NewRepository(client, encryptionKey)
 		s := service.NewService(r, nil)
 		h := handler.NewHandler(s)
-		srv := server.NewServer(h)
+
+		version := os.Getenv("VERSION")
+		port := os.Getenv("PORT")
+		srv := server.NewServer(h, version, port)
 
 		wait := time.Second * 30
 		// Run our server in a goroutine so that it doesn't block.
