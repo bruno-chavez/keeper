@@ -3,16 +3,10 @@ FROM golang:1.24-alpine as builder
 WORKDIR /keeper
 
 # Creates non root user
-ENV USER=user
-ENV UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    "${USER}"
+RUN adduser -D -u 10001 user
+
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY . .
 
@@ -21,7 +15,10 @@ RUN go mod download && \
     apk add --no-cache ca-certificates && \
     update-ca-certificates
 
-FROM busybox:stable
+FROM scratch
+
+ARG VERSION
+ENV VERSION ${VERSION}
 
 # Non root user info
 COPY --from=builder /etc/passwd /etc/passwd
@@ -30,9 +27,9 @@ COPY --from=builder /etc/group /etc/group
 # Certs for making https requests
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-COPY --from=builder /keeper/keeper /
+COPY --from=builder /keeper/keeper /keeper
 
 # Running as keeper
-USER user:user
+USER 10001
 
 ENTRYPOINT ["/keeper"]

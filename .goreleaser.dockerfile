@@ -1,25 +1,17 @@
 FROM busybox:stable
 
-WORKDIR /keeper
 
 ARG VERSION
 ENV VERSION ${VERSION}
 
+RUN mkdir -p /etc/ssl/certs && \
+    wget -qO /etc/ssl/certs/ca-certificates.crt https://curl.se/ca/cacert.pem
+
 # Creates non root user
-ENV USER=user
-ENV UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    "${USER}"
+RUN adduser -D -u 10001 user
+USER 10001
 
-COPY keeper keeper
+COPY keeper /keeper/
+RUN chmod +x /keeper/keeper
 
-# Running as keeper
-USER user:user
-
-ENTRYPOINT ["/keeper"]
+ENTRYPOINT ["keeper"]
