@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func (s Service) Encrypt(ctx context.Context, data string) (string, error) {
+func (s Service) Encrypt(ctx context.Context, data string, encCtx map[string]string) (string, error) {
 
 	splitData := strings.Split(data, "\n")
 	dataMap, orderedKeys, err := stringToTerraformMap(splitData)
@@ -16,7 +16,7 @@ func (s Service) Encrypt(ctx context.Context, data string) (string, error) {
 
 	encryptedDataMap := make(map[string]string)
 	for _, key := range orderedKeys {
-		encryptedDataMap[key], err = s.encryptor.Encrypt(ctx, dataMap[key])
+		encryptedDataMap[key], err = s.encryptor.Encrypt(ctx, dataMap[key], encCtx)
 		if err != nil {
 			return "", fmt.Errorf("error in encrypt service encrypting terraform string: %w", err)
 		}

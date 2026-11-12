@@ -20,6 +20,7 @@ func Execute() {
 
 var awsProfile string
 var encryptionKey string
+var encryptionContext map[string]string
 
 func init() {
 	// Makes error line shows on "log" lib usage
@@ -27,6 +28,8 @@ func init() {
 
 	root.PersistentFlags().StringVarP(&awsProfile, "aws-profile", "p", "", "aws profile to use, if not set, uses default")
 	root.PersistentFlags().StringVarP(&encryptionKey, "encryption-key", "k", "", "arn of the KMS key to be used for encrypting and decrypting values")
+
+	root.PersistentFlags().StringToStringVar(&encryptionContext, "context", nil, "optional KMS encryption context as key=value pairs (repeatable or comma-separated, e.g. purpose=develop-freeze); decrypting requires the same context used to encrypt")
 
 	if awsProfile == "" {
 		awsProfile = os.Getenv("AWS_PROFILE")

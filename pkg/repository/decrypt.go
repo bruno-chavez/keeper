@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 )
 
-func (r Repository) Decrypt(data string) (string, error) {
+func (r Repository) Decrypt(data string, encCtx map[string]string) (string, error) {
 	input := &kms.DecryptInput{
 		KeyId: aws.String(r.encryptionKeyName),
 	}
@@ -18,6 +18,11 @@ func (r Repository) Decrypt(data string) (string, error) {
 	}
 
 	input.CiphertextBlob = decodedInput
+
+	// Only set when non-empty so requests without context stay identical to the previous behavior
+	if len(encCtx) > 0 {
+		input.EncryptionContext = encCtx
+	}
 
 	output, err := r.client.Decrypt(context.TODO(), input)
 	if err != nil {

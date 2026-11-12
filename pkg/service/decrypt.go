@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (s Service) DecryptTerraform(data string) (string, error) {
+func (s Service) DecryptTerraform(data string, encCtx map[string]string) (string, error) {
 
 	// remove comments and empty lines and then splits
 	sanitizedData := sanitizeData(data)
@@ -19,7 +19,7 @@ func (s Service) DecryptTerraform(data string) (string, error) {
 
 	decryptedDataMap := make(map[string]string)
 	for _, k := range orderedKeys {
-		decryptedDataMap[k], err = s.decryptor.Decrypt(dataMap[k])
+		decryptedDataMap[k], err = s.decryptor.Decrypt(dataMap[k], encCtx)
 		if err != nil {
 			return "", fmt.Errorf("error in service decrypting: %w", err)
 		}

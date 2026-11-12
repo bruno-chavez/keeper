@@ -18,7 +18,7 @@ func TestRepository_Encrypt(t *testing.T) {
 	c := clientMock{}
 	r := NewRepository(c, "")
 
-	result, err := r.Encrypt(context.TODO(), "test")
+	result, err := r.Encrypt(context.TODO(), "test", nil)
 	if err != nil {
 		t.Fatalf("error encrypting: %v", err)
 	}
