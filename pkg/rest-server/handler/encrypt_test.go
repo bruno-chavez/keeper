@@ -18,7 +18,7 @@ func defaultRequest(body string) *http.Request {
 
 type mockedEncryptor struct{}
 
-func (mockedEncryptor) Encrypt(_ context.Context, data string) (string, error) {
+func (mockedEncryptor) Encrypt(_ context.Context, data string, _ map[string]string) (string, error) {
 	if data == "variable: wrong body format" {
 		return "", errors.New("cannot process data")
 	}

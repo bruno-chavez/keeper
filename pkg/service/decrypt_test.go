@@ -8,7 +8,7 @@ import (
 
 type mockedDecryptor struct{}
 
-func (mockedDecryptor) Decrypt(encodedData string) (string, error) {
+func (mockedDecryptor) Decrypt(encodedData string, _ map[string]string) (string, error) {
 	encoder := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 	data, err := encoder.DecodeString(encodedData)
 	if err != nil {
@@ -24,7 +24,7 @@ func TestService_Decrypt_ValidInput(t *testing.T) {
 
 	singleLineInput := "db_password = ImZha2VfZGIi"
 
-	result, err := service.DecryptTerraform(singleLineInput)
+	result, err := service.DecryptTerraform(singleLineInput, nil)
 	if err != nil {
 		t.Fatalf("error decrypting %v: %v", singleLineInput, err)
 	}
@@ -38,7 +38,7 @@ func TestService_Decrypt_ValidInput(t *testing.T) {
 	multiLineInput := `db_password = ImZha2VfZGIi
 db_user = ImZha2VfdXNlciI=`
 
-	result, err = service.DecryptTerraform(multiLineInput)
+	result, err = service.DecryptTerraform(multiLineInput, nil)
 	if err != nil {
 		t.Fatalf("error decrypting %v: %v", multiLineInput, err)
 	}
@@ -57,7 +57,7 @@ func TestService_Decrypt_InvalidInput(t *testing.T) {
 
 	input := "db_password: ImZha2VfZGIi"
 
-	_, err := service.DecryptTerraform(input)
+	_, err := service.DecryptTerraform(input, nil)
 	if err == nil {
 		t.Fatalf("expected an error")
 	}
@@ -80,7 +80,7 @@ db_user_2 = ImZha2VfdXNlciI= # this is another inline comment
 
 `
 
-	result, err := service.DecryptTerraform(input)
+	result, err := service.DecryptTerraform(input, nil)
 	if err != nil {
 		t.Fatalf("error decrypting: %v", err)
 	}
@@ -98,7 +98,7 @@ func TestService_Decrypt_InvalidValues(t *testing.T) {
 	d := mockedDecryptor{}
 	service := NewService(nil, d)
 
-	_, err := service.DecryptTerraform("db_password = whoops, not encrypted!")
+	_, err := service.DecryptTerraform("db_password = whoops, not encrypted!", nil)
 
 	if err == nil {
 		t.Fatalf("expected an error")

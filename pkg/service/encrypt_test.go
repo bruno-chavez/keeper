@@ -9,7 +9,7 @@ import (
 
 type mockedEncryptor struct{}
 
-func (mockedEncryptor) Encrypt(_ context.Context, data string) (string, error) {
+func (mockedEncryptor) Encrypt(_ context.Context, data string, _ map[string]string) (string, error) {
 	encoder := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
 	if data == "corrupted input" {
@@ -23,7 +23,7 @@ func TestService_Encrypt_ValidSingleLineInput(t *testing.T) {
 	e := mockedEncryptor{}
 	service := NewService(e, nil)
 
-	result, err := service.Encrypt(context.TODO(), `db_password = "fake_db"`)
+	result, err := service.Encrypt(context.TODO(), `db_password = "fake_db"`, nil)
 	if err != nil {
 		t.Errorf("error encrypting input: %v", err)
 	}
@@ -41,7 +41,7 @@ func TestService_Encrypt_ValidMultiLineInput(t *testing.T) {
 	input := `db_password = "fake_db"
 db_user = "fake_user"`
 
-	result, err := service.Encrypt(context.TODO(), input)
+	result, err := service.Encrypt(context.TODO(), input, nil)
 	if err != nil {
 		t.Errorf("error encrypting input: %v", err)
 		return
@@ -60,7 +60,7 @@ func TestService_Encrypt_EncryptionError(t *testing.T) {
 	e := mockedEncryptor{}
 	service := NewService(e, nil)
 
-	_, err := service.Encrypt(context.TODO(), "db_pass = corrupted input")
+	_, err := service.Encrypt(context.TODO(), "db_pass = corrupted input", nil)
 
 	if err == nil {
 		t.Fatalf("expected an error")
@@ -76,7 +76,7 @@ func TestService_Encrypt_InvalidFormat(t *testing.T) {
 	e := mockedEncryptor{}
 	service := NewService(e, nil)
 
-	_, err := service.Encrypt(context.TODO(), "fake_db")
+	_, err := service.Encrypt(context.TODO(), "fake_db", nil)
 	if err == nil {
 		t.Fatalf("expected an error")
 	}
@@ -85,7 +85,7 @@ func TestService_Encrypt_InvalidFormat(t *testing.T) {
 		t.Errorf("expected invalid format error but got: %v", err)
 	}
 
-	_, err = service.Encrypt(context.TODO(), "db_name: fake_db")
+	_, err = service.Encrypt(context.TODO(), "db_name: fake_db", nil)
 	if err == nil {
 		t.Fatalf("expected an error")
 	}

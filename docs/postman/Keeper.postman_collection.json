@@ -31,7 +31,7 @@
 						"encrypt"
 					]
 				},
-				"description": "Endpoint to encrypt variables"
+				"description": "Endpoint to encrypt variables. Optional query parameter `context` sets a KMS encryption context as comma-separated key:value pairs (e.g. ?context=purpose:develop-freeze); decrypting later requires the same context."
 			},
 			"response": []
 		},

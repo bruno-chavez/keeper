@@ -18,7 +18,7 @@ func TestRepository_Decrypt(t *testing.T) {
 	c := clientMock{}
 	r := NewRepository(c, "")
 
-	result, err := r.Decrypt("dGVzdA==")
+	result, err := r.Decrypt("dGVzdA==", nil)
 	if err != nil {
 		t.Fatalf("error decrypting: %v", err)
 	}

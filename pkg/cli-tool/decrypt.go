@@ -29,7 +29,7 @@ var decrypt = &cobra.Command{
 		}
 
 		log.Println("Decrypting file")
-		decryptedDataString, err := s.DecryptTerraform(string(fileData))
+		decryptedDataString, err := s.DecryptTerraform(string(fileData), encryptionContext)
 		if err != nil {
 			log.Fatalf("error decrypting file: %v", err)
 		}

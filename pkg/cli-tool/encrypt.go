@@ -29,7 +29,7 @@ var encrypt = &cobra.Command{
 		}
 
 		log.Println("Encrypting into: " + encryptedFile)
-		encryptedData, err := s.Encrypt(context.TODO(), string(fileData))
+		encryptedData, err := s.Encrypt(context.TODO(), string(fileData), encryptionContext)
 		if err != nil {
 			log.Fatalf("error encrypting file: %v", err)
 		}
